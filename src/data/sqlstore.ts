@@ -47,7 +47,7 @@ async function storeInit() {
     }
     catch(error) {
         logger.error("store init error %s", error.message);
-        dbInitError = new ErrorStatus(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
+        dbInitError = new ErrorStatus(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error initializing database");
         waitingForDbInit.forEach(function(callback:any) {
             callback(dbInitError);
         });

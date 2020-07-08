@@ -4,6 +4,7 @@ var logHelper = require("./utils/loghelper");
 var HttpStatus = require('http-status-codes');
 const eventApi = require("./api/eventroute");
 const cors = require("cors");
+var ErrorStatus = require("./utils/errorhelper");
 
 const port = process.env.PORT || 3001;
 
@@ -35,6 +36,10 @@ app.listen(port);
 logHelper.logger.info("express now running on port " + port);
 
 app.use(function handleError(error:any, _req: any, res: any, _next: any) {
+    if (error instanceof ErrorStatus) {
+        logHelper.logger.info("request error %d message %s", error.statusCode, error.message);
+        return res.status(error.statusCode).send(error.message);
+    }    
     logHelper.logger.error("in global error handler. Error is %s", error.message);    
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send("Internal server error");
 });
